@@ -25,6 +25,6 @@ const internSchema = new mongoose.Schema({
         ref: "college",
         trim: true
     },
-    isDeleted: { type: boolean, default: false, trim: true }
+    isDeleted: { type: Boolean, default: false, trim: true }
 }, { timestamps: true })
 module.exports = mongoose.model('intern', internSchema)

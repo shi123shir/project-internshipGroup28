@@ -1,4 +1,4 @@
-const collegeModel = require("../Model/collageModel")
+const collegeModel = require("../Model/collegeModel")
 const validator = require ("validator")
 
 const createcollage = async function(req,res){

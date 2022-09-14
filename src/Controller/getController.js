@@ -1,4 +1,4 @@
-const clollegeModel = require("../Model/collageModel")
+const collegeModel = require("../Model/collegeModel")
 const interModel = require("../Model/InternModel")
 
 
@@ -9,7 +9,7 @@ const getcollegeDetails= async function(req,res){
         
         const result = {}
 
-        const college = await clollegeModel.findOne({name: collegeName,isDeleted : false})
+        const college = await collegeModel.findOne({name: collegeName,isDeleted : false})
 
         if(!college) return res.status(404).send({status:false,msg:"college name not exist"})
         
