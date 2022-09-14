@@ -13,7 +13,7 @@ const collegeSchema=new  mongoose.Schema({
         type:String,
         required:"logoLink is required"},
     isDeleted: {
-        type:boolean,
+        type: Boolean,
          default: false}
 },{timestamps:true})
 module.exports = mongoose.model('college', collegeSchema)

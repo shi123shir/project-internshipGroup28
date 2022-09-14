@@ -1,6 +1,5 @@
 const express = require("express")
 const Router = require("./route/route.js")
-const bodyparser= require("body-parser")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const app = express()
