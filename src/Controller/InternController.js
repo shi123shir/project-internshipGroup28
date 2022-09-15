@@ -24,24 +24,22 @@ const createinterns = async function (req, res){
        let reqquery=req.query
       let interdata = req.body
       
-      let collegeid = interdata.collegeId
       if(isValidRequest(reqquery)) return res.status(400).send({status:false,msg:"invalidRequest"})
       if(!isValidRequest(interdata)) return res.status(400).send({status:false,msg:"body should not be empty"})
-      if(!isValidObjectId(collegeid))return res.status(400).send({status:false,msg:"collegeId should be valid"})
+      // if(!isValidObjectId(collegeName))return res.status(400).send({status:false,msg:"collegeId should be valid"})
   
       if(!isValid(interdata.name)) return res.status(400).send({status:false, msg: "name is required"})
       
   
       if(!interdata.name.match(nameregex)) return res.status(400).send ({status:false, msg:"name must be a valid format"})
   
-      if(!isValid(interdata.email)) return res.status(400).send({status:false, msg:"email is required"})
+      // if(!isValid(interdata.email)) return res.status(400).send({status:false, msg:"email is required"})
       if(!interdata.email.match(emailregex)) return res.status(400).send({status:false, msg:"email must in valid format"})
       const isEmailAlreadyUsed = await InternModel.findOne({email:interdata.email})
       if(isEmailAlreadyUsed){
         return res.status(400).send({status: false, msg: "email already registered"})
       }
       
-  
       if(!isValid(interdata.mobile)) return res.status(400).send({status:false, msg:"mobile number must be prasent"})
   
       if(!interdata.mobile.match(mobileregex)) return res.status(400).send({status:false, msg:"mobile number must be a valid format"})
@@ -49,11 +47,18 @@ const createinterns = async function (req, res){
       if(isMobileAlreadyUsed){
         return res.status(400).send({status: false, msg: "mobile number already registered"})
       }
-      let checkid = await collegeModel.findById(collegeid)
-      if(!checkid)  return res.status(404).send({status:false,msg:"college not found"})
-  
-      let createintern = await interModel.create(interdata)
-      return res.status(201).send({status:true,message:"interns created successfully",data:createintern})
+      let checkName = await collegeModel.findOne({name:interdata.collegeName})
+      if(!checkName)  return res.status(404).send({status:false,msg:"college not found"})
+
+      id = checkName._id
+
+      let create = {}
+      create.name= interdata.name
+      create.email = interdata.email
+      create.mobile = interdata.mobile
+      create.collegeId = id
+      let createinterns = await interModel.create(create)
+      return res.status(201).send({status:true,message:"interns created successfully",data:createinterns})
     } 
     catch (err) {
        return res.status(500).send({status:false,msg:"server error",error:err.message})
