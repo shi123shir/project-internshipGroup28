@@ -1,6 +1,6 @@
 
 const collegeModel = require("../Model/collegeModel")
-// const interModel = require("../Model/InternModel")
+
 const InternModel = require("../Model/InternModel");
 
 const isValid = function (value) {
