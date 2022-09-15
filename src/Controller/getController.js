@@ -2,13 +2,15 @@ const collegeModel = require("../Model/collegeModel")
 const interModel = require("../Model/InternModel")
 
   
+  
   const isValidRequest = function (object) {
     return Object.keys(object).length > 0
-  };
-  
+};
   
 const getcollegeDetails= async function(req,res){
     try {
+       let reqbody=req.body
+       if (isValidRequest(reqbody)) return res.status(400).send({ status: false, msg: "invalid request in request body" })
         let reqquery=req.query
         if(!isValidRequest(reqquery)) return res.status(400).send({status:false,msg:"query params should not be empty"})
 
