@@ -1,6 +1,8 @@
-const collegeModel=require("../Model/collageModel")
-const internModel=require("../Model/internModel")
-const validate=require("validator")
+
+const collegeModel = require("../Model/collegeModel")
+const interModel = require("../Model/InternModel")
+const InternModel = require("../Model/InternModel");
+const mongoose=require("mongoose");
 const isValid = function (value) {
     if (typeof value === "undefined" || value === null) return false;
     if (typeof value === "string" && value.trim().length > 0) return true;
@@ -14,28 +16,50 @@ const isValid = function (value) {
   const isValidObjectId = function (objectId) {
     return mongoose.Types.ObjectId.isValid(objectId)
   };
+const createinterns = async function (req, res){
+    try {
+        const nameregex = /^[a-zA-Z ]*$/
+        const emailregex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+        const mobileregex = /^([0|\+[0-9]{1,5})?([7-9][0-9]{9})$/
+       let reqquery=req.query
+      let interdata = req.body
+      
+      let collegeid = interdata.collegeId
+      if(isValidRequest(reqquery)) return res.status(400).send({status:false,msg:"invalidRequest"})
+      if(!isValidRequest(interdata)) return res.status(400).send({status:false,msg:"body should not be empty"})
+      if(!isValidObjectId(collegeid))return res.status(400).send({status:false,msg:"collegeId should be valid"})
   
- 
-const createIntern= async function(req,res){
-try {
-    let reqbody=req.body
-    let reqquery=req.query
-    // if there is any request in query params
-    if(isValidRequest(reqquery)) return res.status(400).send({status:false,msg:"invalidRequest"})
-    // if the body is empty validation
-    if(!isValidRequest(reqbody)) return res.status(400).send({status:false,msg:"body should not be empty"})
-    const {name, mobile, email, collegeName}=reqbody
-    if (Object.keys(reqbody).length>4) return  res.status(400).send({status:false,msg:"body should be less that 4 keys"})
-    if(!isValid(name)) return  res.status(400).send({status:false,msg:"name is required"}) 
-        if (!validator.isAlpha(value)) {
-          return res.status(400).send({status:false,msg:"name should be valid"});
-        }
+      if(!isValid(interdata.name)) return res.status(400).send({status:false, msg: "name is required"})
+      
+  
+      if(!interdata.name.match(nameregex)) return res.status(400).send ({status:false, msg:"name must be a valid format"})
+  
+      if(!isValid(interdata.email)) return res.status(400).send({status:false, msg:"email is required"})
+      if(!interdata.email.match(emailregex)) return res.status(400).send({status:false, msg:"email must in valid format"})
+      const isEmailAlreadyUsed = await InternModel.findOne({email:interdata.email})
+      if(isEmailAlreadyUsed){
+        return res.status(400).send({status: false, msg: "email already registered"})
+      }
+      
+  
+      if(!isValid(interdata.mobile)) return res.status(400).send({status:false, msg:"mobile number must be prasent"})
+  
+      if(!interdata.mobile.match(mobileregex)) return res.status(400).send({status:false, msg:"mobile number must be a valid format"})
+      const isMobileAlreadyUsed = await InternModel.findOne({mobile:interdata.mobile})
+      if(isMobileAlreadyUsed){
+        return res.status(400).send({status: false, msg: "mobile number already registered"})
+      }
+      let checkid = await collegeModel.findById(collegeid)
+      if(!checkid)  return res.status(404).send({status:false,msg:"college not found"})
+  
+      let createintern = await interModel.create(interdata)
+      return res.status(201).send({status:true,message:"interns created successfully",data:createintern})
+    } 
+    catch (err) {
+       return res.status(500).send({status:false,msg:"server error",error:err.message})
+    }
 
-} catch (error) {
-    res.status(500).send({status:false,msg:error.message})
 }
-}
 
+module.exports.createinterns = createinterns
 
-
-module.exports.createIntern=createIntern
