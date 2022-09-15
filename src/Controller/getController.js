@@ -1,19 +1,12 @@
 const collegeModel = require("../Model/collegeModel")
 const interModel = require("../Model/InternModel")
-const isValid = function (value) {
-    if (typeof value === "undefined" || value === null) return false;
-    if (typeof value === "string" && value.trim().length > 0) return true;
-    return false;
-  };
+
   
   const isValidRequest = function (object) {
     return Object.keys(object).length > 0
   };
   
-  const isValidObjectId = function (objectId) {
-    return mongoose.Types.ObjectId.isValid(objectId)
-  };
-
+  
 const getcollegeDetails= async function(req,res){
     try {
         let reqquery=req.query

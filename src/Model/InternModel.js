@@ -4,7 +4,7 @@ const internSchema = new mongoose.Schema({
 
     name: {
         type: String,
-        required: "name is required",
+        required:true ,
         unique: true,
         trim: true
     },
@@ -16,7 +16,7 @@ const internSchema = new mongoose.Schema({
     },
     mobile: {
         type: String,
-        required: "mobile no is required",
+        required: true,
         unique: true,
         trim: true
     },
